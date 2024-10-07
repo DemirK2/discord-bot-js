@@ -1,0 +1,12 @@
+services:
+  discord-bot-js:
+    image: "node:lts-alpine"
+    container_name: discord-bot-js
+    user: "1000"
+    restart: unless-stopped
+    working_dir: /home/node/app
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./:/home/node/app
+    command: "npm start"

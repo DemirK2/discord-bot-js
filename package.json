@@ -1,0 +1,33 @@
+{
+  "name": "discord-bot-js",
+  "version": "1.0.0",
+  "description": "A Discord.JS Bot template",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm install && node index.js",
+    "start-install": "npm install",
+    "start-run": "node index.js"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DemirK2/discord-bot-js.git"
+  },
+  "homepage": "https://github.com/DemirK2/discord-bot-js#readme",
+  "bugs": {
+    "url": "https://github.com/DemirK2/discord-bot-js/issues"
+  },
+  "author": {
+    "name": "DemirK2",
+    "email": "demirk2@pokenix.com",
+    "url": "https://www.pokenix.com/member/demirk2/profile"
+  },
+  "keywords": [
+    "discord-bot-js"
+  ],
+  "dependencies": {
+    "better-sqlite3": "8.4.0",
+    "discord.js": "14.11.0",
+    "quick.db": "9.1.7"
+  }
+}

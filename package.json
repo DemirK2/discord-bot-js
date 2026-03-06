@@ -1,0 +1,43 @@
+{
+  "name": "discord-bot-js",
+  "version": "2.0.0",
+  "description": "Discord bot using discord.js, TypeScript, and MariaDB",
+  "author": "DemirK2",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DemirK2/discord-bot-js.git"
+  },
+
+  "bugs": {
+    "url": "https://github.com/DemirK2/discord-bot-js/issues"
+  },
+
+  "homepage": "https://github.com/DemirK2/discord-bot-js",
+
+  "engines": {
+    "node": ">=20"
+  },
+
+  "scripts": {
+    "dev": "tsx src/app.ts",
+    "build": "tsc",
+    "start": "node dist/app.js",
+    "deploy": "tsx src/deploy/deployCommands.ts"
+  },
+
+  "dependencies": {
+    "discord.js": "^14.22.1",
+    "dotenv": "^17.2.3",
+    "mariadb": "^3.4.5"
+  },
+
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}

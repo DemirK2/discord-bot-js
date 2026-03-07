@@ -3,6 +3,7 @@ version: "3.9"
 services:
   bot:
     build: .
+    pull_policy: build
     restart: unless-stopped
     depends_on:
       - mariadb

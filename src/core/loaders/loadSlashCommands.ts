@@ -1,7 +1,7 @@
 import { Interaction } from "discord.js";
-import { BotClient } from "../client/BotClient";
-import { commandGuard } from "../guards/commandGuard";
-import { handleCommandError } from "../utils/errorHandler";
+import { BotClient } from "../client/BotClient.js";
+import { commandGuard } from "../guards/commandGuard.js";
+import { handleCommandError } from "../utils/errorHandler.js";
 
 export async function handleSlashCommand(
   client: BotClient,

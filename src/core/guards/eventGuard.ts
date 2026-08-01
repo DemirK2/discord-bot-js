@@ -1,5 +1,6 @@
-import { BotClient } from "../client/BotClient";
-import { getGuildBanReason } from "../managers/botBanManager";
+import { BotClient } from "../client/BotClient.js";
+import { env } from "../config/env.js";
+import { getGuildBanReason } from "../managers/botBanManager.js";
 
 export interface EventGuardResult {
   allowed: boolean;
@@ -15,7 +16,7 @@ export async function eventGuard(
 
   const guildId = firstArg?.guildId ?? firstArg?.guild?.id ?? null;
 
-  if (guildId) {
+  if (env.DATABASE_ENABLED && guildId) {
     const guildBanReason = await getGuildBanReason(guildId);
 
     if (guildBanReason) {

@@ -1,12 +1,11 @@
-version: "3.9"
-
 services:
   bot:
     build: .
     pull_policy: build
     restart: unless-stopped
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
     environment:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
       CLIENT_ID: ${CLIENT_ID}
@@ -14,6 +13,7 @@ services:
       BOT_OWNER_IDS: ${BOT_OWNER_IDS}
       PREFIX_DEFAULT: ${PREFIX_DEFAULT}
 
+      DATABASE_ENABLED: "true"
       DB_HOST: mariadb
       DB_PORT: 3306
       DB_USER: ${DB_USER}
@@ -30,6 +30,12 @@ services:
       MARIADB_PASSWORD: ${DB_PASSWORD}
     volumes:
       - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
 
 volumes:
   mariadb_data:

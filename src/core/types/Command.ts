@@ -1,10 +1,11 @@
 import {
   ChatInputCommandInteraction,
   Message,
-  PermissionResolvable,
   SlashCommandBuilder,
+  SlashCommandOptionsOnlyBuilder,
+  SlashCommandSubcommandsOnlyBuilder,
 } from "discord.js";
-import { BotClient } from "../client/BotClient";
+import { BotClient } from "../client/BotClient.js";
 
 export interface BaseCommandOptions {
   cooldown?: number;
@@ -12,13 +13,16 @@ export interface BaseCommandOptions {
   botOwnerOnly?: boolean;
   guildOnly?: boolean;
   dmOnly?: boolean;
-  permissions?: PermissionResolvable[];
+  permissions?: bigint[];
   botPermissions?: number;
   botTerms?: boolean;
 }
 
 export interface SlashCommand extends BaseCommandOptions {
-  data: SlashCommandBuilder;
+  data:
+    | SlashCommandBuilder
+    | SlashCommandOptionsOnlyBuilder
+    | SlashCommandSubcommandsOnlyBuilder;
   execute: (
     client: BotClient,
     interaction: ChatInputCommandInteraction

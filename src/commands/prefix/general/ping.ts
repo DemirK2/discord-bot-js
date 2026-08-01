@@ -1,4 +1,4 @@
-import { PrefixCommand } from "../../../core/types/Command";
+import { PrefixCommand } from "../../../core/types/Command.js";
 
 const command: PrefixCommand = {
   name: "ping",

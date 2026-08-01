@@ -1,62 +1,57 @@
 import "dotenv/config";
 import { readdirSync } from "node:fs";
-import { join } from "node:path";
-import { BotClient } from "./core/client/BotClient";
-import { env } from "./core/config/env";
-import { initDatabase } from "./core/database/init";
-import { registerEvent } from "./core/loaders/loadEvents";
-import { Event } from "./core/types/Event";
-import { PrefixCommand, SlashCommand } from "./core/types/Command";
+import { dirname, extname, join } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { BotClient } from "./core/client/BotClient.js";
+import { env } from "./core/config/env.js";
+import { initDatabase } from "./core/database/init.js";
+import { registerEvent } from "./core/loaders/loadEvents.js";
+import { Event } from "./core/types/Event.js";
+import { PrefixCommand, SlashCommand } from "./core/types/Command.js";
 
 const client = new BotClient();
+const runtimeDirectory = dirname(fileURLToPath(import.meta.url));
+const runtimeExtension = extname(fileURLToPath(import.meta.url));
+
+function getCategoryFiles(basePath: string): string[] {
+  return readdirSync(basePath, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .flatMap((entry) =>
+      readdirSync(join(basePath, entry.name))
+        .filter((file) => file.endsWith(runtimeExtension))
+        .map((file) => join(basePath, entry.name, file))
+    );
+}
 
 async function loadSlashCommands(): Promise<void> {
-  const basePath = join(process.cwd(), "src", "commands", "slash");
-  const categories = readdirSync(basePath);
+  const basePath = join(runtimeDirectory, "commands", "slash");
 
-  for (const category of categories) {
-    const categoryPath = join(basePath, category);
-    const files = readdirSync(categoryPath).filter((file) =>
-      file.endsWith(".ts")
-    );
-
-    for (const file of files) {
-      const filePath = join(categoryPath, file);
-      const mod = await import(filePath);
-      const command = mod.default as SlashCommand;
-
-      client.slashCommands.set(command.data.name, command);
-    }
+  for (const filePath of getCategoryFiles(basePath)) {
+    const mod = await import(pathToFileURL(filePath).href);
+    const command = mod.default as SlashCommand;
+    client.slashCommands.set(command.data.name, command);
   }
 }
 
 async function loadPrefixCommands(): Promise<void> {
-  const basePath = join(process.cwd(), "src", "commands", "prefix");
-  const categories = readdirSync(basePath);
+  const basePath = join(runtimeDirectory, "commands", "prefix");
 
-  for (const category of categories) {
-    const categoryPath = join(basePath, category);
-    const files = readdirSync(categoryPath).filter((file) =>
-      file.endsWith(".ts")
-    );
-
-    for (const file of files) {
-      const filePath = join(categoryPath, file);
-      const mod = await import(filePath);
-      const command = mod.default as PrefixCommand;
-
-      client.prefixCommands.set(command.name, command);
-    }
+  for (const filePath of getCategoryFiles(basePath)) {
+    const mod = await import(pathToFileURL(filePath).href);
+    const command = mod.default as PrefixCommand;
+    client.prefixCommands.set(command.name, command);
   }
 }
 
 async function loadEvents(): Promise<void> {
-  const basePath = join(process.cwd(), "src", "events");
-  const files = readdirSync(basePath).filter((file) => file.endsWith(".ts"));
+  const basePath = join(runtimeDirectory, "events");
+  const files = readdirSync(basePath).filter((file) =>
+    file.endsWith(runtimeExtension)
+  );
 
   for (const file of files) {
     const filePath = join(basePath, file);
-    const mod = await import(filePath);
+    const mod = await import(pathToFileURL(filePath).href);
     const event = mod.default as Event;
 
     registerEvent(client, event);
@@ -64,7 +59,11 @@ async function loadEvents(): Promise<void> {
 }
 
 async function start(): Promise<void> {
-  await initDatabase();
+  if (env.DATABASE_ENABLED) {
+    await initDatabase();
+  } else {
+    console.log("Database disabled; database-backed features are unavailable.");
+  }
 
   await loadSlashCommands();
   await loadPrefixCommands();

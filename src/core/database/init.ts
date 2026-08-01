@@ -1,4 +1,4 @@
-import { query } from "./db";
+import { query } from "./db.js";
 
 export async function initDatabase(): Promise<void> {
   await query(`

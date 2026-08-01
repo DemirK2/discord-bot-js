@@ -1,4 +1,4 @@
-import { query } from "../database/db";
+import { query } from "../database/db.js";
 
 const termsCache = new Map<string, boolean>();
 

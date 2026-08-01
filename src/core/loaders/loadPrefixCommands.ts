@@ -1,12 +1,14 @@
 import { Message } from "discord.js";
-import { BotClient } from "../client/BotClient";
-import { env } from "../config/env";
-import { commandGuard } from "../guards/commandGuard";
-import { getPrefix } from "../managers/prefixManager";
-import { handleCommandError } from "../utils/errorHandler";
+import { BotClient } from "../client/BotClient.js";
+import { env } from "../config/env.js";
+import { commandGuard } from "../guards/commandGuard.js";
+import { getPrefix } from "../managers/prefixManager.js";
+import { handleCommandError } from "../utils/errorHandler.js";
 
 async function getGuildPrefix(guildId: string | null): Promise<string | null> {
   if (!guildId) return null;
+
+  if (!env.DATABASE_ENABLED) return env.PREFIX_DEFAULT;
 
   const prefix = await getPrefix(guildId);
 

@@ -1,10 +1,11 @@
 import { SlashCommandBuilder } from "discord.js";
-import { SlashCommand } from "../../../core/types/Command";
+import { SlashCommand } from "../../../core/types/Command.js";
+import { env } from "../../../core/config/env.js";
 import {
   banUser,
   getUserBanReason,
   unbanUser,
-} from "../../../core/managers/botBanManager";
+} from "../../../core/managers/botBanManager.js";
 
 const command: SlashCommand = {
   data: new SlashCommandBuilder()
@@ -26,6 +27,14 @@ const command: SlashCommand = {
   botOwnerOnly: true,
 
   async execute(client, interaction) {
+    if (!env.DATABASE_ENABLED) {
+      await interaction.reply({
+        content: "This command requires the database to be enabled.",
+        flags: 64,
+      });
+      return;
+    }
+
     const userId = interaction.options.getString("userid", true);
     const reason = interaction.options.getString("reason", false);
 

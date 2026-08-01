@@ -1,4 +1,4 @@
-import { query } from "../database/db";
+import { query } from "../database/db.js";
 
 const prefixCache = new Map<string, string | null>();
 

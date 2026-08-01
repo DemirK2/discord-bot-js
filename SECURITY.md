@@ -14,10 +14,9 @@ If you discover a security vulnerability in this project, please report it respo
 
 Do **not** open a public issue containing the vulnerability details.
 
-Instead:
-
-1. Open a **GitHub issue** describing the problem in general terms, or
-2. Contact the repository owner directly through GitHub.
+Instead, use [GitHub's private vulnerability reporting](https://github.com/DemirK2/discord-bot-js/security/advisories/new).
+If private reporting is unavailable, contact the repository owner directly
+through GitHub without publishing technical details.
 
 Please include the following information if possible:
 

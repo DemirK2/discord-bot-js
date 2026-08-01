@@ -1,4 +1,4 @@
-import { query } from "../database/db";
+import { query } from "../database/db.js";
 
 const bannedUserCache = new Map<string, string | null>();
 const bannedGuildCache = new Map<string, string | null>();

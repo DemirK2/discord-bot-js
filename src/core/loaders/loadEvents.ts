@@ -1,7 +1,7 @@
-import { BotClient } from "../client/BotClient";
-import { eventGuard } from "../guards/eventGuard";
-import { Event } from "../types/Event";
-import { handleEventError } from "../utils/eventErrorHandler";
+import { BotClient } from "../client/BotClient.js";
+import { eventGuard } from "../guards/eventGuard.js";
+import { Event } from "../types/Event.js";
+import { handleEventError } from "../utils/eventErrorHandler.js";
 
 export function registerEvent(client: BotClient, event: Event): void {
   const wrapped = async (...args: any[]): Promise<void> => {

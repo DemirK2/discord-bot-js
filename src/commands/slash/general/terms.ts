@@ -2,16 +2,20 @@ import {
   SlashCommandBuilder,
   EmbedBuilder,
 } from "discord.js";
-import { SlashCommand } from "../../../core/types/Command";
+import { SlashCommand } from "../../../core/types/Command.js";
+import { env } from "../../../core/config/env.js";
 import {
   acceptBotTerms,
   hasAcceptedBotTerms,
-} from "../../../core/managers/botTermsManager";
+} from "../../../core/managers/botTermsManager.js";
 
 const command: SlashCommand = {
   data: new SlashCommandBuilder()
     .setName("terms")
     .setDescription("View or accept the bot terms")
+    .addSubcommand((sub) =>
+      sub.setName("view").setDescription("View the bot terms")
+    )
     .addSubcommand((sub) =>
       sub
         .setName("accept")
@@ -19,11 +23,19 @@ const command: SlashCommand = {
     ),
 
   async execute(client, interaction) {
-    const sub = interaction.options.getSubcommand(false);
+    const sub = interaction.options.getSubcommand(true);
 
     const userId = interaction.user.id;
 
     if (sub === "accept") {
+      if (!env.DATABASE_ENABLED) {
+        await interaction.reply({
+          content: "Accepting terms requires the database to be enabled.",
+          flags: 64,
+        });
+        return;
+      }
+
       const accepted = await hasAcceptedBotTerms(userId);
 
       if (accepted) {

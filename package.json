@@ -6,38 +6,37 @@
   "license": "MIT",
   "private": true,
   "type": "module",
-
   "repository": {
     "type": "git",
     "url": "https://github.com/DemirK2/discord-bot-js.git"
   },
-
   "bugs": {
     "url": "https://github.com/DemirK2/discord-bot-js/issues"
   },
-
   "homepage": "https://github.com/DemirK2/discord-bot-js",
-
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
-
   "scripts": {
     "dev": "tsx src/app.ts",
     "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "npm run build && node --test tests/*.test.js",
     "start": "node dist/app.js",
-    "deploy": "tsx src/deploy/deployCommands.ts"
+    "deploy": "tsx src/deploy/deployCommand.ts"
   },
-
   "dependencies": {
     "discord.js": "^14.22.1",
     "dotenv": "^17.2.3",
     "mariadb": "^3.4.5"
   },
-
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^24.3.0",
+    "eslint": "^10.8.0",
     "tsx": "^4.20.5",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.65.0"
   }
 }

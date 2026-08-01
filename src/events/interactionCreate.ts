@@ -1,5 +1,5 @@
-import { handleSlashCommand } from "../core/loaders/loadSlashCommands";
-import { Event } from "../core/types/Event";
+import { handleSlashCommand } from "../core/loaders/loadSlashCommands.js";
+import { Event } from "../core/types/Event.js";
 
 const event: Event = {
   name: "interactionCreate",

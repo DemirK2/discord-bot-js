@@ -1,4 +1,4 @@
-import { query } from "../database/db";
+import { query } from "../database/db.js";
 
 const permissionCache = new Map<string, number>();
 

@@ -1,4 +1,4 @@
-import { BotClient } from "../client/BotClient";
+import { BotClient } from "../client/BotClient.js";
 
 export interface Event {
   name: string;

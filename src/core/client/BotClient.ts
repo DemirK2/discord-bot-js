@@ -4,7 +4,7 @@ import {
   GatewayIntentBits,
   Partials,
 } from "discord.js";
-import { PrefixCommand, SlashCommand } from "../types/Command";
+import { PrefixCommand, SlashCommand } from "../types/Command.js";
 
 export class BotClient extends Client {
   public slashCommands = new Collection<string, SlashCommand>();

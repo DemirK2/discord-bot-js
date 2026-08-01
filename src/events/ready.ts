@@ -1,4 +1,4 @@
-import { Event } from "../core/types/Event";
+import { Event } from "../core/types/Event.js";
 
 const event: Event = {
   name: "ready",

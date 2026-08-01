@@ -1,7 +1,7 @@
 import { REST, Routes } from "discord.js";
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
-import { env } from "../core/config/env";
+import { env } from "../core/config/env.js";
 
 async function deployCommands(): Promise<void> {
   const commands: any[] = [];
@@ -35,10 +35,10 @@ async function deployCommands(): Promise<void> {
     );
 
     console.log("DEV guild commands deployed.");
+    return;
   }
 
   console.log("Deploying global commands...");
-
   await rest.put(Routes.applicationCommands(env.CLIENT_ID), {
     body: commands,
   });

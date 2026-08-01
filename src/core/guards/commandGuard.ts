@@ -3,16 +3,16 @@ import {
   Message,
   PermissionsBitField,
 } from "discord.js";
-import { BotClient } from "../client/BotClient";
-import { env } from "../config/env";
+import { BotClient } from "../client/BotClient.js";
+import { env } from "../config/env.js";
 import {
   getGuildBanReason,
   getUserBanReason,
-} from "../managers/botBanManager";
-import { getUserBotPermissionLevel } from "../managers/botPermissionManager";
-import { hasAcceptedBotTerms } from "../managers/botTermsManager";
-import { getCooldownRemaining } from "../managers/cooldownManager";
-import { Command } from "../types/Command";
+} from "../managers/botBanManager.js";
+import { getUserBotPermissionLevel } from "../managers/botPermissionManager.js";
+import { hasAcceptedBotTerms } from "../managers/botTermsManager.js";
+import { getCooldownRemaining } from "../managers/cooldownManager.js";
+import { Command } from "../types/Command.js";
 
 type GuardTarget = ChatInputCommandInteraction | Message;
 
@@ -29,24 +29,26 @@ export async function commandGuard(
   const userId = "user" in target ? target.user.id : target.author.id;
   const guildId = target.guildId;
 
-  const userBanReason = await getUserBanReason(userId);
-  if (userBanReason) {
-    void client;
-    return {
-      allowed: false,
-      reason: `You are banned from using this bot. Reason: ${userBanReason}`,
-    };
-  }
-
-  if (guildId) {
-    const guildBanReason = await getGuildBanReason(guildId);
-
-    if (guildBanReason) {
+  if (env.DATABASE_ENABLED) {
+    const userBanReason = await getUserBanReason(userId);
+    if (userBanReason) {
       void client;
       return {
         allowed: false,
-        reason: `This server is banned from using this bot. Reason: ${guildBanReason}`,
+        reason: `You are banned from using this bot. Reason: ${userBanReason}`,
       };
+    }
+
+    if (guildId) {
+      const guildBanReason = await getGuildBanReason(guildId);
+
+      if (guildBanReason) {
+        void client;
+        return {
+          allowed: false,
+          reason: `This server is banned from using this bot. Reason: ${guildBanReason}`,
+        };
+      }
     }
   }
 
@@ -106,7 +108,11 @@ export async function commandGuard(
       };
     }
 
-    const perms = new PermissionsBitField(member.permissions);
+    const memberPermissions =
+      typeof member.permissions === "string"
+        ? BigInt(member.permissions)
+        : member.permissions;
+    const perms = new PermissionsBitField(memberPermissions);
     if (!perms.has(command.permissions)) {
       return {
         allowed: false,
@@ -116,6 +122,13 @@ export async function commandGuard(
   }
 
   if (command.botPermissions !== undefined) {
+    if (!env.DATABASE_ENABLED) {
+      return {
+        allowed: false,
+        reason: "This command requires the database to be enabled.",
+      };
+    }
+
     const level = await getUserBotPermissionLevel(userId);
 
     if (level < command.botPermissions) {
@@ -127,6 +140,13 @@ export async function commandGuard(
   }
 
   if (command.botTerms) {
+    if (!env.DATABASE_ENABLED) {
+      return {
+        allowed: false,
+        reason: "This command requires the database to be enabled.",
+      };
+    }
+
     const accepted = await hasAcceptedBotTerms(userId);
 
     if (!accepted) {
